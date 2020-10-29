@@ -1,8 +1,9 @@
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
+import numpy as np
 import pickle
 
 
-class cifar10Loader(Dataset):
+class Cifar10Loader(Dataset):
 
     def __init__(self, filename):
         self.dataset = self.unpickle(filename)
@@ -13,8 +14,8 @@ class cifar10Loader(Dataset):
 
     def __getitem__(self, idx):
         img = self.images[idx]/255
-        g_img = self.convert_rgb2gray(img)
-        return {'input': g_img, 'target': img}
+        g_img = np.reshape(self.convert_rgb2gray(img), (1,32,32))
+        return {'input': g_img, 'target': np.reshape(img, (3,32,32))}
 
     def unpickle(self, file):
         with open(file, 'rb') as fo:
